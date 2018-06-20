@@ -1,3 +1,28 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+login:
+    path: /auth/login
+    controller: 'App\Controller\SSOController::login'
+    methods: [POST]
+    defaults:
+        _format: json
+
+logout:
+    path: /auth/logout
+    controller: 'App\Controller\SSOController::logout'
+    methods: [DELETE]
+    defaults:
+        _format: json
+
+me:
+    path: /auth/me
+    controller: 'App\Controller\SSOController::me'
+    methods: [GET]
+    defaults:
+        _format: json
+
+form:
+    path: /auth/form
+    controller: 'App\Controller\SSOController::form'
+    methods: [GET]
+    defaults:
+        _format: html
+

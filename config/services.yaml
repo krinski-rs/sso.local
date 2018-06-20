@@ -1,6 +1,20 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    cors:
+        allowed_origin:
+            - 'http://site.local'
+            - 'http://sso.local'
+            - chrome-extension://aicmkgpgakddgnaphhhpliifpcfhicfo
+        allowed_headers:
+            - AccessToken
+            - Content-Type
+            - AuthVersion
+            - AppKey
+            - Cookie
+            - Accept
+            - Origin
+            - Authorization
 
 services:
     # default configuration for services in *this* file
@@ -25,3 +39,20 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\EventListener\CorsListener:
+        arguments: ['%cors%']
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 300 }
+
+    App\Service\Strategy\AuthStrategy:
+        public: false
+        arguments:
+            - "@service_container"
+            - "@logger"
+            
+    auth_strategy:
+          class: App\Service\Strategy\AuthStrategy
+          public: true
+
+    
