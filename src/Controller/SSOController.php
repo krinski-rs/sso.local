@@ -13,8 +13,6 @@ class SSOController extends Controller
     {
         try {
             
-            $authVersion = $objRequest->headers->get('AuthVersion', 'V1');
-            
             $objAuthStrategy = $this->get('auth_strategy');
             if(!($objAuthStrategy instanceof AuthStrategy)){
                 throw new \RuntimeException('Class "App\Service\Strategy\AuthStrategy" not found.');
@@ -22,11 +20,8 @@ class SSOController extends Controller
             
             $objSsoInterface = $objAuthStrategy->getSSO($objRequest);
             $objSsoInterface->login($objRequest);
-            
-            $objSsoInterface->getUserData();
-            
 //             $helper = $this->get('security.authentication_utils');
-            return new JsonResponse(['mensagem'=>'login', $objRequest->get('password')], Response::HTTP_OK);
+            return new JsonResponse($objSsoInterface->getUserData(), Response::HTTP_OK);
         } catch (\RuntimeException $e) {
             return new JsonResponse(['mensagem'=>$e->getMessage()], Response::HTTP_PRECONDITION_FAILED);
         } catch (\Exception $e) {

@@ -12,6 +12,7 @@ class SsoUser extends SsoAbstract
                 $this->invalidate();
             }
             $this->validate($objRequest);
+            
             return $this->setUserData(['a'=>1,'b'=>2])
             ->getUserData();
         } catch (\Exception $ex){
