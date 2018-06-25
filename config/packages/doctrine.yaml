@@ -8,14 +8,15 @@ parameters:
 doctrine:
     dbal:
         # configure these for your database server
-        driver: 'pdo_mysql'
-        server_version: '5.7'
-        charset: utf8mb4
+        driver: '%env(resolve:DATABASE_DRIVER)%'
+        server_version: '%env(resolve:DATABASE_VERSION)%'
+        charset: '%env(resolve:DATABASE_CHARSET)%'
         default_table_options:
-            charset: utf8mb4
+            charset: '%env(resolve:DATABASE_CHARSET)%'
             collate: utf8mb4_unicode_ci
 
         url: '%env(resolve:DATABASE_URL)%'
+        schema_filter: '%env(resolve:DATABASE_SCHEMA)%'
     orm:
         auto_generate_proxy_classes: '%kernel.debug%'
         naming_strategy: doctrine.orm.naming_strategy.underscore
@@ -23,7 +24,7 @@ doctrine:
         mappings:
             App:
                 is_bundle: false
-                type: annotation
-                dir: '%kernel.project_dir%/src/Entity'
+                type: yml
+                dir: '%kernel.project_dir%/config/mappings'
                 prefix: 'App\Entity'
                 alias: App

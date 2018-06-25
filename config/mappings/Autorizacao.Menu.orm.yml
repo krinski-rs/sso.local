@@ -1,0 +1,48 @@
+App\Entity\Autorizacao\Menu:
+    type: entity
+    table: autorizacao.menu
+    indexes:
+        IDX_75251E5DCCD7E912:
+            columns:
+                - menu_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nome:
+            type: string
+            nullable: false
+            length: 20
+            options:
+                fixed: false
+        ativo:
+            type: boolean
+            nullable: false
+        lft:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+        rgt:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+    manyToOne:
+        menu:
+            targetEntity: App\Entity\Autorizacao\Menu
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                menu_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
