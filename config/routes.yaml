@@ -19,7 +19,7 @@ me:
     defaults:
         _format: json
 
-form:
+form_login:
     path: /auth/form
     controller: 'App\Controller\SSOController::form'
     methods: [GET]

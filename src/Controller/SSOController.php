@@ -12,7 +12,6 @@ class SSOController extends Controller
     public function login(Request $objRequest)
     {
         try {
-            
             $objAuthStrategy = $this->get('auth_strategy');
             if(!($objAuthStrategy instanceof AuthStrategy)){
                 throw new \RuntimeException('Class "App\Service\Strategy\AuthStrategy" not found.');
@@ -20,7 +19,7 @@ class SSOController extends Controller
             
             $objSsoInterface = $objAuthStrategy->getSSO($objRequest);
             $objSsoInterface->login($objRequest);
-//             $helper = $this->get('security.authentication_utils');
+            
             return new JsonResponse($objSsoInterface->getUserData(), Response::HTTP_OK);
         } catch (\RuntimeException $e) {
             return new JsonResponse(['mensagem'=>$e->getMessage()], Response::HTTP_PRECONDITION_FAILED);
@@ -32,8 +31,14 @@ class SSOController extends Controller
     public function logout(Request $objRequest)
     {
         try {
-//             $helper = $this->get('security.authentication_utils');
-            return new JsonResponse(['mensagem'=>'logout'], Response::HTTP_OK);
+            $objAuthStrategy = $this->get('auth_strategy');
+            if(!($objAuthStrategy instanceof AuthStrategy)){
+                throw new \RuntimeException('Class "App\Service\Strategy\AuthStrategy" not found.');
+            }
+            
+            $objSsoInterface = $objAuthStrategy->getSSO($objRequest);
+            
+            return new JsonResponse(['logout' => $objSsoInterface->invalidate()], Response::HTTP_OK);
         } catch (\RuntimeException $e) {
             return new JsonResponse(['mensagem'=>$e->getMessage()], Response::HTTP_PRECONDITION_FAILED);
         } catch (\Exception $e) {
@@ -44,8 +49,18 @@ class SSOController extends Controller
     public function me(Request $objRequest)
     {
         try {
-//             $helper = $this->get('security.authentication_utils');
-            return new JsonResponse(['mensagem'=>'me'], Response::HTTP_OK);
+            $objAuthStrategy = $this->get('auth_strategy');
+            if(!($objAuthStrategy instanceof AuthStrategy)){
+                throw new \RuntimeException('Class "App\Service\Strategy\AuthStrategy" not found.');
+            }
+            
+            $objSsoInterface = $objAuthStrategy->getSSO($objRequest);
+            $arrayUser = $objSsoInterface->getCredentials($objRequest);
+            
+            if(empty($arrayUser)){
+                throw new \RuntimeException('user is not logged in.');
+            }
+            return new JsonResponse($arrayUser, Response::HTTP_OK);
         } catch (\RuntimeException $e) {
             return new JsonResponse(['mensagem'=>$e->getMessage()], Response::HTTP_PRECONDITION_FAILED);
         } catch (\Exception $e) {
@@ -56,8 +71,7 @@ class SSOController extends Controller
     public function form(Request $objRequest)
     {
         try {
-//             $helper = $this->get('security.authentication_utils');
-            return new JsonResponse(['mensagem'=>'form'], Response::HTTP_OK);
+            return $this->render('auth\login.html.twig', ['error' => NULL, 'last_username' => NULL]);
         } catch (\RuntimeException $e) {
             return new JsonResponse(['mensagem'=>$e->getMessage()], Response::HTTP_PRECONDITION_FAILED);
         } catch (\Exception $e) {
