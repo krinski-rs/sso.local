@@ -9,7 +9,7 @@ use Psr\Log\LoggerInterface;
 
 abstract class SsoAbstract implements SsoInterface {
     
-    private $objContainer = NULL;
+    protected $objContainer = NULL;
     protected $objSession = NULL;
     protected $objLogger = NULL;
     private $objRequestStack = NULL;
@@ -55,7 +55,7 @@ abstract class SsoAbstract implements SsoInterface {
     public function setUserData(array $userData):SsoInterface
     {
         $this->getUserSession();
-        $userData['accessToken'] = $this->objSession->getId();
+        $userData['AccessToken'] = $this->objSession->getId();
         $this->objSession->set('userData', $userData);
         return $this;
     }
@@ -73,17 +73,6 @@ abstract class SsoAbstract implements SsoInterface {
     
     public function getCredentials():array
     {
-        $objRequest = $this->getRequest();
-        $objHeaderBag = $objRequest->headers;
-        
-        $accessToken = trim($objHeaderBag->get('AccessToken'));
-        if(!$accessToken){
-            throw new \InvalidArgumentException("Parameter 'AccessToken' of value '' violated a constraint 'This value should not be blank.'");
-        }
-        
-        $this->getUserSession();
-        $this->objSession->save();
-        $this->objSession->setId($accessToken);
         if($this->isLoggedIn()){
             return $this->getUserData();
         }

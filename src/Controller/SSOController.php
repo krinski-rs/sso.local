@@ -32,8 +32,13 @@ class SSOController extends Controller
     public function logout(Request $objRequest)
     {
         try {
-//             $helper = $this->get('security.authentication_utils');
-            return new JsonResponse(['mensagem'=>'logout'], Response::HTTP_OK);
+            $objAuthStrategy = $this->get('auth_strategy');
+            if(!($objAuthStrategy instanceof AuthStrategy)){
+                throw new \RuntimeException('Class "App\Service\Strategy\AuthStrategy" not found.');
+            }
+            
+            $objSsoInterface = $objAuthStrategy->getSSO($objRequest);
+            return new JsonResponse(['logout' => $objSsoInterface->invalidate()], Response::HTTP_OK);
         } catch (\RuntimeException $e) {
             return new JsonResponse(['mensagem'=>$e->getMessage()], Response::HTTP_PRECONDITION_FAILED);
         } catch (\Exception $e) {
@@ -44,8 +49,17 @@ class SSOController extends Controller
     public function me(Request $objRequest)
     {
         try {
-//             $helper = $this->get('security.authentication_utils');
-            return new JsonResponse(['mensagem'=>'me'], Response::HTTP_OK);
+            $objAuthStrategy = $this->get('auth_strategy');
+            if(!($objAuthStrategy instanceof AuthStrategy)){
+                throw new \RuntimeException('Class "App\Service\Strategy\AuthStrategy" not found.');
+            }
+            
+            $objSsoInterface = $objAuthStrategy->getSSO($objRequest);
+            $arrayUser = $objSsoInterface->getCredentials($objRequest);
+            if(empty($arrayUser)){
+                throw new \RuntimeException('user is not logged in.');
+            }
+            return new JsonResponse($arrayUser, Response::HTTP_OK);
         } catch (\RuntimeException $e) {
             return new JsonResponse(['mensagem'=>$e->getMessage()], Response::HTTP_PRECONDITION_FAILED);
         } catch (\Exception $e) {
