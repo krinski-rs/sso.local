@@ -6,6 +6,7 @@ parameters:
             - 'http://site.local'
             - 'http://sso.local'
             - chrome-extension://aicmkgpgakddgnaphhhpliifpcfhicfo
+            - teste.local
         allowed_headers:
             - AccessToken
             - Content-Type
