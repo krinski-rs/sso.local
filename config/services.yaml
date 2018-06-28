@@ -16,6 +16,7 @@ parameters:
             - Accept
             - Origin
             - Authorization
+    locale: 'en'
 
 services:
     # default configuration for services in *this* file
@@ -54,6 +55,15 @@ services:
             
     auth_strategy:
           class: App\Service\Strategy\AuthStrategy
+          public: true
+
+    App\Service\Autorizacao\Aplicacao:
+        arguments:
+            - "@doctrine"
+            - "@logger"
+
+    autorizacao.aplicacao:
+          alias: App\Service\Autorizacao\Aplicacao
           public: true
 
     
