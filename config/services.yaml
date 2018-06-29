@@ -11,7 +11,7 @@ parameters:
             - AccessToken
             - Content-Type
             - AuthVersion
-            - AppKey
+            - ApiKey
             - Cookie
             - Accept
             - Origin

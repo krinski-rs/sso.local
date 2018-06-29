@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use App\Service\Strategy\AuthStrategy;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 class SSOController extends Controller
 {
@@ -21,6 +22,8 @@ class SSOController extends Controller
             $objSsoInterface->login($objRequest);
             
             return new JsonResponse($objSsoInterface->getUserData(), Response::HTTP_OK);
+        } catch (BadCredentialsException $e) {
+            return new JsonResponse(['mensagem'=>$e->getMessage()], Response::HTTP_UNAUTHORIZED);
         } catch (\RuntimeException $e) {
             return new JsonResponse(['mensagem'=>$e->getMessage()], Response::HTTP_PRECONDITION_FAILED);
         } catch (\Exception $e) {
