@@ -28,6 +28,7 @@ class CorsListener// implements EventSubscriberInterface
         $method  = $objRequest->getRealMethod();
         if ('OPTIONS' === strtoupper($method)) {
             $objResponse = new Response();
+            $objResponse->headers->set('Access-Control-Allow-Origin', $this->cors['allowed_origin']);
             $objResponse->headers->set('Access-Control-Allow-Credentials', 'true');
             $objResponse->headers->set('Access-Control-Allow-Methods', 'POST,GET,PUT,DELETE,PATCH,OPTIONS');
             $objResponse->headers->set('Access-Control-Allow-Headers', implode(",", $this->corsParameters['allowed_headers']));
@@ -60,12 +61,8 @@ class CorsListener// implements EventSubscriberInterface
             return;
         }
         
-        if (!in_array($request->headers->get('origin'), $this->corsParameters['allowed_origin'])){
-            throw new \RuntimeException("Origin '{$request->headers->get('origin')}' Access Denied!!!");
-        }
-        
         $objResponse = $objFilterResponseEvent->getResponse();
-        $objResponse->headers->set('Access-Control-Allow-Origin', implode(",", $this->corsParameters['allowed_origin']));
+        $objResponse->headers->set('Access-Control-Allow-Origin', $this->corsParameters['allowed_origin']);
         $objResponse->headers->set('Access-Control-Allow-Credentials', 'true');
         $objResponse->headers->set('Access-Control-Allow-Methods', 'POST,GET,PUT,DELETE,PATCH,OPTIONS');
         $objResponse->headers->set('Access-Control-Allow-Headers', implode(",", $this->corsParameters['allowed_headers']));
