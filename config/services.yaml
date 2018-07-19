@@ -3,7 +3,8 @@
 parameters:
     cors:
         allowed_origin:
-            - 'http://site.local'
+            - 'http://site.local.com'
+            - 'http://pessoa.local.com'
             - 'http://sso.local'
             - chrome-extension://aicmkgpgakddgnaphhhpliifpcfhicfo
             - teste.local
@@ -11,11 +12,12 @@ parameters:
             - AccessToken
             - Content-Type
             - AuthVersion
-            - AppKey
+            - ApiKey
             - Cookie
             - Accept
             - Origin
             - Authorization
+    locale: 'en'
 
 services:
     # default configuration for services in *this* file
@@ -54,6 +56,15 @@ services:
             
     auth_strategy:
           class: App\Service\Strategy\AuthStrategy
+          public: true
+
+    App\Service\Autorizacao\Aplicacao:
+        arguments:
+            - "@doctrine"
+            - "@logger"
+
+    autorizacao.aplicacao:
+          alias: App\Service\Autorizacao\Aplicacao
           public: true
 
     

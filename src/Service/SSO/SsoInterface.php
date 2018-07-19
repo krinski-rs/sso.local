@@ -25,5 +25,5 @@ interface SsoInterface {
     
     public function setRequestStack(RequestStack $objRequestStack):SsoInterface;
         
-    public function getCredentials():array;
+    public function getCredentials(Request $objRequest):array;
 }

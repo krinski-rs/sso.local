@@ -70,9 +70,19 @@ abstract class SsoAbstract implements SsoInterface {
         $this->objRequestStack = $objRequestStack;
         return $this;
     }
-    
-    public function getCredentials():array
+
+    private function setSessionId(string $accessToken):SsoInterface
     {
+        $this->getUserSession()->setId($accessToken);
+        return $this;
+    }
+
+    public function getCredentials(Request $objRequest):array
+    {
+        if(!$objRequest->cookies->get('sso')){
+            return array();
+        }
+        $this->setSessionId($objRequest->cookies->get('sso'));
         if($this->isLoggedIn()){
             return $this->getUserData();
         }
