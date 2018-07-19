@@ -56,10 +56,9 @@ class SSOController extends Controller
             if(!($objAuthStrategy instanceof AuthStrategy)){
                 throw new \RuntimeException('Class "App\Service\Strategy\AuthStrategy" not found.');
             }
-            
+
             $objSsoInterface = $objAuthStrategy->getSSO($objRequest);
             $arrayUser = $objSsoInterface->getCredentials($objRequest);
-            
             if(empty($arrayUser)){
                 throw new \RuntimeException('user is not logged in.');
             }

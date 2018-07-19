@@ -59,6 +59,7 @@ class SsoUser extends SsoAbstract
             }
             
             $userData = [
+                'id'            => $objAutorizacaoUsuario->getId(),
                 'dataCadastro'  => $objAutorizacaoUsuario->getDataCadastro()->format('Y-m-d H:i:s'),
                 'nome'          => $objAutorizacaoUsuario->getNome(),
                 'username'      => $objAutorizacaoUsuario->getUsername()
