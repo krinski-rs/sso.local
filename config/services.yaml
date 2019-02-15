@@ -3,11 +3,11 @@
 parameters:
     cors:
         allowed_origin:
-            - 'http://site.local.com'
-            - 'http://pessoa.local.com'
-            - 'http://sso.local'
-            - chrome-extension://aicmkgpgakddgnaphhhpliifpcfhicfo
-            - teste.local
+            - 'http://sso.local.com:3000'
+#            - 'http://site.local.com'
+#            - 'http://pessoa.local.com'
+#            - 'http://sso.local'
+#            - 'hrome-extension://aicmkgpgakddgnaphhhpliifpcfhicfo'
         allowed_headers:
             - AccessToken
             - Content-Type
