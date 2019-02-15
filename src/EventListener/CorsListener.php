@@ -28,7 +28,7 @@ class CorsListener// implements EventSubscriberInterface
         $method  = $objRequest->getRealMethod();
         if ('OPTIONS' === strtoupper($method)) {
             $objResponse = new Response();
-            $objResponse->headers->set('Access-Control-Allow-Origin', $this->cors['allowed_origin']);
+            $objResponse->headers->set('Access-Control-Allow-Origin', $this->corsParameters['allowed_origin']);
             $objResponse->headers->set('Access-Control-Allow-Credentials', 'true');
             $objResponse->headers->set('Access-Control-Allow-Methods', 'POST,GET,PUT,DELETE,PATCH,OPTIONS');
             $objResponse->headers->set('Access-Control-Allow-Headers', implode(",", $this->corsParameters['allowed_headers']));
