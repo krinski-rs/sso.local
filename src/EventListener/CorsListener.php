@@ -20,15 +20,17 @@ class CorsListener// implements EventSubscriberInterface
         /*
          * Não faça nada se não for o MASTER_REQUEST
          */
+        $objRequest = $objGetResponseEvent->getRequest();
         if (HttpKernelInterface::MASTER_REQUEST !== $objGetResponseEvent->getRequestType()) {
-            return;
+            return ;
         }
         
-        $objRequest = $objGetResponseEvent->getRequest();
         $method  = $objRequest->getRealMethod();
         if ('OPTIONS' === strtoupper($method)) {
+            
             $objResponse = new Response();
-            $objResponse->headers->set('Access-Control-Allow-Origin', $this->corsParameters['allowed_origin']);
+            $allowed_origin = array_search($objRequest->headers->get('origin'), $this->corsParameters['allowed_origin']);
+            $objResponse->headers->set('Access-Control-Allow-Origin', trim($this->corsParameters['allowed_origin'][$allowed_origin]));
             $objResponse->headers->set('Access-Control-Allow-Credentials', 'true');
             $objResponse->headers->set('Access-Control-Allow-Methods', 'POST,GET,PUT,DELETE,PATCH,OPTIONS');
             $objResponse->headers->set('Access-Control-Allow-Headers', implode(",", $this->corsParameters['allowed_headers']));
@@ -51,7 +53,7 @@ class CorsListener// implements EventSubscriberInterface
     
     public function onKernelResponse(FilterResponseEvent $objFilterResponseEvent)
     {
-        $request = $objFilterResponseEvent->getRequest();
+        $objRequest = $objFilterResponseEvent->getRequest();
         /*
          * Execute o CORS aqui para garantir que o domínio esteja no sistema
          */
@@ -61,8 +63,9 @@ class CorsListener// implements EventSubscriberInterface
             return;
         }
         
+        $allowed_origin = array_search($objRequest->headers->get('origin'), $this->corsParameters['allowed_origin']);
         $objResponse = $objFilterResponseEvent->getResponse();
-        $objResponse->headers->set('Access-Control-Allow-Origin', $this->corsParameters['allowed_origin']);
+        $objResponse->headers->set('Access-Control-Allow-Origin', trim($this->corsParameters['allowed_origin'][$allowed_origin]));
         $objResponse->headers->set('Access-Control-Allow-Credentials', 'true');
         $objResponse->headers->set('Access-Control-Allow-Methods', 'POST,GET,PUT,DELETE,PATCH,OPTIONS');
         $objResponse->headers->set('Access-Control-Allow-Headers', implode(",", $this->corsParameters['allowed_headers']));
