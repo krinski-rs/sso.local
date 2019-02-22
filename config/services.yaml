@@ -3,9 +3,9 @@
 parameters:
     cors:
         allowed_origin:
-            - 'http://sso.local.com:3000'
+            - 'http://contrato.local.com:3000'
+            - 'http://pessoa.local.com'
 #            - 'http://site.local.com'
-#            - 'http://pessoa.local.com'
 #            - 'http://sso.local'
 #            - 'hrome-extension://aicmkgpgakddgnaphhhpliifpcfhicfo'
         allowed_headers:
@@ -17,6 +17,7 @@ parameters:
             - Accept
             - Origin
             - Authorization
+            - application/json
     locale: 'en'
 
 services:
