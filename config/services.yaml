@@ -5,6 +5,7 @@ parameters:
         allowed_origin:
             - 'http://contrato.local.com:3000'
             - 'http://luma.local.com:3000'
+            - 'http://fast.local.com:3000'
             - 'http://pessoa.local.com'
 #            - 'http://site.local.com'
 #            - 'http://sso.local'
