@@ -20,16 +20,23 @@ class CorsListener// implements EventSubscriberInterface
         /*
          * Não faça nada se não for o MASTER_REQUEST
          */
-        $objRequest = $objGetResponseEvent->getRequest();
         if (HttpKernelInterface::MASTER_REQUEST !== $objGetResponseEvent->getRequestType()) {
-            return ;
+            return;
+        }
+        $objRequest = $objGetResponseEvent->getRequest();
+        $method  = $objRequest->getRealMethod();
+        $allowed_origin = array_search($objRequest->server->get('HTTP_REFERER'), $this->corsParameters['allowed_origin']);
+        $allowed_origin = (!$allowed_origin ? array_search($objRequest->getClientIp(), $this->corsParameters['allowed_origin']) : $allowed_origin);
+        
+        if(!$allowed_origin){
+            $objResponse = new Response();
+            $objResponse->headers->set('status', 403);
+            $objGetResponseEvent->setResponse($objResponse);
+            return $objGetResponseEvent;
         }
         
-        $method  = $objRequest->getRealMethod();
         if ('OPTIONS' === strtoupper($method)) {
-            
             $objResponse = new Response();
-            $allowed_origin = array_search($objRequest->headers->get('origin'), $this->corsParameters['allowed_origin']);
             $objResponse->headers->set('Access-Control-Allow-Origin', trim($this->corsParameters['allowed_origin'][$allowed_origin]));
             $objResponse->headers->set('Access-Control-Allow-Credentials', 'true');
             $objResponse->headers->set('Access-Control-Allow-Methods', 'POST,GET,PUT,DELETE,PATCH,OPTIONS');
@@ -40,12 +47,15 @@ class CorsListener// implements EventSubscriberInterface
         }
         
         if ($objRequest->headers->get('content-type') == 'application/json') {
-            $data = json_decode($objGetResponseEvent->getRequest()->getContent(), true);
-            if(count($data)){
-                reset($data);
-                while($dado = current($data)){
-                    $objRequest->attributes->set(key($data), $dado);
-                    next($data);
+            $content = $objGetResponseEvent->getRequest()->getContent();
+            if($content){
+                $data = json_decode($content, true);
+                if(count($data)){
+                    reset($data);
+                    while($dado = current($data)){
+                        $objRequest->attributes->set(key($data), $dado);
+                        next($data);
+                    }
                 }
             }
         }
@@ -57,13 +67,15 @@ class CorsListener// implements EventSubscriberInterface
         /*
          * Execute o CORS aqui para garantir que o domínio esteja no sistema
          */
-        
-        //if (in_array($request->headers->get('origin'), $this->cors)) {
         if (HttpKernelInterface::MASTER_REQUEST !== $objFilterResponseEvent->getRequestType()) {
             return;
         }
-        
-        $allowed_origin = array_search($objRequest->headers->get('origin'), $this->corsParameters['allowed_origin']);
+        $allowed_origin = array_search($objRequest->headers->get('referer'), $this->corsParameters['allowed_origin']);
+        $allowed_origin = (!$allowed_origin ? array_search($objRequest->getClientIp(), $this->corsParameters['allowed_origin']) : $allowed_origin);
+        if(!$allowed_origin){
+            $objResponse = $objFilterResponseEvent->getResponse();
+            return $objResponse->headers->set('status', 403);
+        }
         $objResponse = $objFilterResponseEvent->getResponse();
         $objResponse->headers->set('Access-Control-Allow-Origin', trim($this->corsParameters['allowed_origin'][$allowed_origin]));
         $objResponse->headers->set('Access-Control-Allow-Credentials', 'true');

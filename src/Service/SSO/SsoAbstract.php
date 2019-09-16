@@ -9,10 +9,10 @@ use Psr\Log\LoggerInterface;
 
 abstract class SsoAbstract implements SsoInterface {
     
-    protected $objContainer = NULL;
-    protected $objSession = NULL;
-    protected $objLogger = NULL;
-    private $objRequestStack = NULL;
+    protected $objContainer     = NULL;
+    protected $objSession       = NULL;
+    protected $objLogger        = NULL;
+    private $objRequestStack    = NULL;
     
     public function __construct(Container $objContainer, LoggerInterface $objLoggerInterface){
         $this->objContainer = $objContainer;
@@ -79,10 +79,10 @@ abstract class SsoAbstract implements SsoInterface {
 
     public function getCredentials(Request $objRequest):array
     {
-        if(!$objRequest->cookies->get('sso')){
+        if(!$objRequest->headers->get('AccessToken', NULL)){
             return array();
         }
-        $this->setSessionId($objRequest->cookies->get('sso'));
+        $this->setSessionId($objRequest->headers->get('AccessToken', NULL));
         if($this->isLoggedIn()){
             return $this->getUserData();
         }

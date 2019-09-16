@@ -1,0 +1,8 @@
+services:
+    App\Service\Authorization\Application:
+        arguments: ["@doctrine", "@logger"]
+
+    autorizacao.aplicacao:
+          alias: App\Service\Authorization\Application
+          public: true
+    

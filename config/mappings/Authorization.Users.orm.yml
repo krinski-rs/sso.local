@@ -1,0 +1,63 @@
+App\Entity\Authorization\Users:
+    type: entity
+    table: '"authorization".users'
+    repositoryClass: App\Repository\Authorization\UsersRepository
+    uniqueConstraints:
+        users_username_key:
+            columns:
+                - username
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        username:
+            type: string
+            nullable: false
+            length: 50
+            options:
+                fixed: false
+        password:
+            type: string
+            nullable: false
+            length: 64
+            options:
+                fixed: false
+        isActive:
+            type: boolean
+            nullable: false
+            options:
+                default: true
+            column: is_active
+        isDeleted:
+            type: boolean
+            nullable: false
+            options:
+                default: false
+            column: is_deleted
+        recordingDate:
+            type: datetime
+            nullable: false
+            options:
+                default: now()
+            column: recording_date
+        removalDate:
+            type: datetime
+            nullable: true
+            column: removal_date
+        expirationDate:
+            type: datetime
+            nullable: true
+            column: expiration_date
+        salt:
+            type: string
+            nullable: false
+            length: 100
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

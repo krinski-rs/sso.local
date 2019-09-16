@@ -6,12 +6,14 @@ use App\Service\SSO\SsoInterface;
 use App\Service\SSO\SsoUser;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use App\Service\SSO\SsoApi;
 
 class AuthStrategy
 {
-    const V1 = 'V1';
-    private $objContainer = NULL;
-    private $objLoggerInterface = NULL;
+    const GRANT_CLIENT_CREDENTIALS  = 'client_credentials';
+    const GRANT_PASSWORD            = 'password';
+    private $objContainer           = NULL;
+    private $objLoggerInterface     = NULL;
     
     public function __construct(ContainerInterface $objContainer, LoggerInterface $objLoggerInterface)
     {
@@ -24,10 +26,13 @@ class AuthStrategy
         try {
             
             $objSsoInterface = NULL;
-            $haders = $objRequest->headers;
-            switch ($haders->get('AuthVersion', 'V1'))
+            $grantType = $objRequest->get('grant_type');
+            switch ($grantType)
             {
-                case self::V1:
+                case self::GRANT_CLIENT_CREDENTIALS:
+                    $objSsoInterface = new SsoApi($this->objContainer, $this->objLoggerInterface);
+                    break;
+                case self::GRANT_PASSWORD:
                     $objSsoInterface = new SsoUser($this->objContainer, $this->objLoggerInterface);
                     break;
                 default:

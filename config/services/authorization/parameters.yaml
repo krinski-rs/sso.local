@@ -1,0 +1,15 @@
+parameters:
+    cors:
+        allowed_origin:
+            - 'dionysiotonial.local.com'
+            - 'teste.local.br'
+        allowed_headers:
+            - AccessToken
+            - Content-Type
+            - AuthVersion
+            - ApiKey
+            - Cookie
+            - Accept
+            - Origin
+            - Authorization
+    
