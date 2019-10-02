@@ -1,0 +1,77 @@
+App\Entity\Authorization\Applications:
+    type: entity
+    table: '"authorization".applications'
+    repositoryClass: App\Repository\Authorization\ApplicationsRepository
+    uniqueConstraints:
+        applications_client_id_key:
+            columns:
+                - client_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        name:
+            type: string
+            nullable: false
+            length: 100
+            options:
+                fixed: false
+        acronym:
+            type: string
+            nullable: true
+            length: 10
+            options:
+                fixed: false
+        apiKey:
+            type: string
+            nullable: false
+            length: 64
+            options:
+                fixed: false
+            column: api_key
+        clientId:
+            type: string
+            nullable: false
+            length: 64
+            options:
+                fixed: false
+            column: client_id
+        isActive:
+            type: boolean
+            nullable: false
+            options:
+                default: true
+            column: is_active
+        isDeleted:
+            type: boolean
+            nullable: false
+            options:
+                default: false
+            column: is_deleted
+        recordingDate:
+            type: datetime
+            nullable: false
+            options:
+                default: now()
+            column: recording_date
+        removalDate:
+            type: datetime
+            nullable: true
+            column: removal_date
+        expirationDate:
+            type: datetime
+            nullable: true
+            column: expiration_date
+        host:
+            type: string
+            nullable: true
+            length: 100
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

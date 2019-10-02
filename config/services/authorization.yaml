@@ -1,0 +1,4 @@
+imports:
+    - { resource: './authorization/parameters.yaml' }
+    - { resource: './authorization/services.yaml' }
+    

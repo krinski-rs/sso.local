@@ -7,24 +7,28 @@ parameters:
 
 doctrine:
     dbal:
-        # configure these for your database server
-        driver: '%env(resolve:DATABASE_DRIVER)%'
-        server_version: '%env(resolve:DATABASE_VERSION)%'
-        charset: '%env(resolve:DATABASE_CHARSET)%'
-        default_table_options:
-            charset: '%env(resolve:DATABASE_CHARSET)%'
-            collate: utf8mb4_unicode_ci
-
-        url: '%env(resolve:DATABASE_URL)%'
-        schema_filter: '%env(resolve:DATABASE_SCHEMA)%'
+        default_connection: default
+        connections:
+            default:
+                driver:   '%env(resolve:DATABASE_DRIVER)%'
+                host:     '%env(resolve:DATABASE_HOST)%'
+                port:     '%env(resolve:DATABASE_PORT)%'
+                dbname:   '%env(resolve:DATABASE_DBNAME)%'
+                user:     '%env(resolve:DATABASE_USER)%'
+                password: '%env(resolve:DATABASE_PASSWORD)%'
+                server_version: '%env(resolve:DATABASE_VERSION)%'
+                schema_filter: '%env(resolve:DATABASE_SCHEMA)%'
+                charset: '%env(resolve:DATABASE_CHARSET)%'
     orm:
+        default_entity_manager: default
         auto_generate_proxy_classes: '%kernel.debug%'
-        naming_strategy: doctrine.orm.naming_strategy.underscore
-        auto_mapping: true
-        mappings:
-            App:
-                is_bundle: false
-                type: yml
-                dir: '%kernel.project_dir%/config/mappings'
-                prefix: 'App\Entity'
-                alias: App
+        entity_managers:
+            default:
+                connection: default
+                mappings:
+                    App:
+                        is_bundle: false
+                        type: yml
+                        dir: '%kernel.project_dir%/config/mappings'
+                        prefix: 'App\Entity'
+                        alias: AppEntity

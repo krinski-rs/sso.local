@@ -1,8 +1,9 @@
-App\Entity\Autorizacao\Usuario:
+App\Entity\Authorization\Users:
     type: entity
-    table: autorizacao.usuario
+    table: '"authorization".users'
+    repositoryClass: App\Repository\Authorization\UsersRepository
     uniqueConstraints:
-        usuarios_unique:
+        users_username_key:
             columns:
                 - username
     id:
@@ -15,7 +16,7 @@ App\Entity\Autorizacao\Usuario:
             generator:
                 strategy: SEQUENCE
     fields:
-        nome:
+        name:
             type: string
             nullable: false
             length: 255
@@ -30,42 +31,39 @@ App\Entity\Autorizacao\Usuario:
         password:
             type: string
             nullable: false
-            length: 100
+            length: 64
             options:
                 fixed: false
+        isActive:
+            type: boolean
+            nullable: false
+            options:
+                default: true
+            column: is_active
+        isDeleted:
+            type: boolean
+            nullable: false
+            options:
+                default: false
+            column: is_deleted
+        recordingDate:
+            type: datetime
+            nullable: false
+            options:
+                default: now()
+            column: recording_date
+        removalDate:
+            type: datetime
+            nullable: true
+            column: removal_date
+        expirationDate:
+            type: datetime
+            nullable: true
+            column: expiration_date
         salt:
             type: string
             nullable: false
             length: 100
             options:
                 fixed: false
-        ativo:
-            type: boolean
-            nullable: false
-            options:
-                default: true
-        dataCadastro:
-            type: datetime
-            nullable: false
-            options:
-                default: now()
-            column: data_cadastro
-    manyToMany:
-        idRegras:
-            targetEntity: App\Entity\Autorizacao\Regra
-            cascade: {  }
-            fetch: LAZY
-            mappedBy: null
-            inversedBy: idUsuarios
-            joinTable:
-                name: autorizacao.usuario_regra
-                joinColumns:
-                    -
-                        name: id_usuarios
-                        referencedColumnName: id
-                inverseJoinColumns:
-                    -
-                        name: id_regras
-                        referencedColumnName: id
-            orderBy: null
     lifecycleCallbacks: {  }
