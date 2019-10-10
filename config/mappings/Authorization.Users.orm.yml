@@ -31,7 +31,7 @@ App\Entity\Authorization\Users:
         password:
             type: string
             nullable: false
-            length: 64
+            length: 100
             options:
                 fixed: false
         isActive:
