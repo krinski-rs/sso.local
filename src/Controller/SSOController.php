@@ -23,11 +23,11 @@ class SSOController extends Controller
             
             return new JsonResponse($objSsoInterface->getUserData(), Response::HTTP_OK);
         } catch (BadCredentialsException $e) {
-            return new JsonResponse(['mensagem'=>$e->getMessage()], Response::HTTP_UNAUTHORIZED);
+            return new JsonResponse(['message'=>$e->getMessage()], Response::HTTP_UNAUTHORIZED);
         } catch (\RuntimeException $e) {
-            return new JsonResponse(['mensagem'=>$e->getMessage()], Response::HTTP_PRECONDITION_FAILED);
+            return new JsonResponse(['message'=>$e->getMessage()], Response::HTTP_PRECONDITION_FAILED);
         } catch (\Exception $e) {
-            return new JsonResponse(['mensagem'=>$e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(['message'=>$e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
     
@@ -43,9 +43,9 @@ class SSOController extends Controller
             
             return new JsonResponse(['logout' => $objSsoInterface->invalidate()], Response::HTTP_OK);
         } catch (\RuntimeException $e) {
-            return new JsonResponse(['mensagem'=>$e->getMessage()], Response::HTTP_PRECONDITION_FAILED);
+            return new JsonResponse(['message'=>$e->getMessage()], Response::HTTP_PRECONDITION_FAILED);
         } catch (\Exception $e) {
-            return new JsonResponse(['mensagem'=>$e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(['message'=>$e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
     
@@ -64,9 +64,9 @@ class SSOController extends Controller
             }
             return new JsonResponse($arrayUser, Response::HTTP_OK);
         } catch (\RuntimeException $e) {
-            return new JsonResponse(['mensagem'=>$e->getMessage()], Response::HTTP_PRECONDITION_FAILED);
+            return new JsonResponse(['message'=>$e->getMessage()], Response::HTTP_PRECONDITION_FAILED);
         } catch (\Exception $e) {
-            return new JsonResponse(['mensagem'=>$e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(['message'=>$e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
     
@@ -85,9 +85,9 @@ class SSOController extends Controller
             }
             return new JsonResponse($arrayUser, Response::HTTP_OK);
         } catch (\RuntimeException $e) {
-            return new JsonResponse(['mensagem'=>$e->getMessage()], Response::HTTP_PRECONDITION_FAILED);
+            return new JsonResponse(['message'=>$e->getMessage()], Response::HTTP_PRECONDITION_FAILED);
         } catch (\Exception $e) {
-            return new JsonResponse(['mensagem'=>$e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(['message'=>$e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
     
@@ -96,9 +96,9 @@ class SSOController extends Controller
         try {
             return $this->render('auth\login.html.twig', ['error' => NULL, 'last_username' => NULL]);
         } catch (\RuntimeException $e) {
-            return new JsonResponse(['mensagem'=>$e->getMessage()], Response::HTTP_PRECONDITION_FAILED);
+            return new JsonResponse(['message'=>$e->getMessage()], Response::HTTP_PRECONDITION_FAILED);
         } catch (\Exception $e) {
-            return new JsonResponse(['mensagem'=>$e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(['message'=>$e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

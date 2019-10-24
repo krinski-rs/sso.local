@@ -60,34 +60,15 @@ class SsoUser extends SsoAbstract
                 throw new BadCredentialsException("Unauthorized user");
             }
             
-//             $objAutorizacaoUsuarioRepository    = $objEntityManager->getRepository("App:Autorizacao\Usuario");
-//             if(!($objAutorizacaoUsuarioRepository instanceof \Doctrine\ORM\EntityRepository)){
-//                 throw new \RuntimeException("Repository for 'Autorizacao\Usuario' not found. ");
-//             }
-            
-//             $username = trim($objRequest->get('username', NULL));
-//             $password = trim($objRequest->get('password', NULL));
-//             $password = trim($objRequest->get('client_id', NULL));
-//             $password = trim($objRequest->get('client_secret', NULL));
-            
-//             $objAutorizacaoUsuario = $objAutorizacaoUsuarioRepository->findOneBy(array('username'=>$username, 'ativo'=>true));
-//             if(!($objAutorizacaoUsuario instanceof Usuario)){
-//                 throw new BadCredentialsException("Usuario not found.");
-//             }
-            
-//             $objUserPasswordEncoder = new BCryptPasswordEncoder(12);
-//             if (!$objUserPasswordEncoder->isPasswordValid($objAutorizacaoUsuario->getPassword(), trim($password), $objAutorizacaoUsuario->getSalt())) {
-//                 throw new BadCredentialsException("Invalid credentials");
-//             }
-            
-//             $userData = [
-//                 'id'            => $objAutorizacaoUsuario->getId(),
-//                 'dataCadastro'  => $objAutorizacaoUsuario->getDataCadastro()->format('Y-m-d H:i:s'),
-//                 'nome'          => $objAutorizacaoUsuario->getNome(),
-//                 'username'      => $objAutorizacaoUsuario->getUsername()
-//             ];
-            
-//             return $this->setUserData($userData)->getUserData();
+            $userData = [
+                'id'            => $objUsers->getId(),
+                'recordingDate' => $objUsers->getRecordingDate()->format('Y-m-d H:i:s'),
+                'name'          => $objUsers->getName(),
+                'username'      => $objUsers->getUsername(),
+                'avatar'        => ''
+            ];
+
+            return $this->setUserData($userData)->getUserData();
         } catch (BadCredentialsException $ex){
             throw $ex;
         } catch (\Exception $ex){
@@ -100,6 +81,7 @@ class SsoUser extends SsoAbstract
         try {
             $authorization = $objRequest->headers->get('Authorization', NULL);
             $this->userCredentials = [trim($objRequest->get('username', NULL)), trim($objRequest->get('password', NULL))];
+            $this->objLogger->error('SsoUser',$this->userCredentials);
             if(!$authorization){
                 throw new \RuntimeException("Parameter 'Authorization Header' of value '' violated a constraint 'This value should not be blank.'");
             }

@@ -3,6 +3,7 @@ parameters:
         allowed_origin:
             - 'dionysiotonial.local.com'
             - 'teste.local.br'
+            - 'http://localhost:3000'
         allowed_headers:
             - AccessToken
             - Content-Type

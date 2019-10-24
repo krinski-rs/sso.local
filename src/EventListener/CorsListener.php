@@ -9,10 +9,12 @@ use Symfony\Component\HttpFoundation\Response;
 class CorsListener// implements EventSubscriberInterface
 {
     private $corsParameters = NULL;
-
-    public function __construct($cors)
+    private $objLogger = NULL;
+    
+    public function __construct($cors, $objLogger)
     {
         $this->corsParameters = $cors;
+        $this->objLogger = $objLogger;
     }
     
     public function onKernelRequest(GetResponseEvent $objGetResponseEvent)
@@ -24,11 +26,13 @@ class CorsListener// implements EventSubscriberInterface
             return;
         }
         $objRequest = $objGetResponseEvent->getRequest();
+        $this->objLogger->error('CORS', [$objRequest->headers->all(), $objRequest->server->get('HTTP_REFERER'), array_search($objRequest->headers->get('origin'), $this->corsParameters['allowed_origin'])]);
         $method  = $objRequest->getRealMethod();
-        $allowed_origin = array_search($objRequest->server->get('HTTP_REFERER'), $this->corsParameters['allowed_origin']);
-        $allowed_origin = (!$allowed_origin ? array_search($objRequest->getClientIp(), $this->corsParameters['allowed_origin']) : $allowed_origin);
         
-        if(!$allowed_origin){
+        $allowed_origin = array_search($objRequest->headers->get('origin'), $this->corsParameters['allowed_origin']);
+        $allowed_origin = (($allowed_origin === FALSE) ? array_search($objRequest->getClientIp(), $this->corsParameters['allowed_origin']) : $allowed_origin);
+        
+        if($allowed_origin === FALSE){
             $objResponse = new Response();
             $objResponse->headers->set('status', 403);
             $objGetResponseEvent->setResponse($objResponse);
@@ -46,7 +50,9 @@ class CorsListener// implements EventSubscriberInterface
             return ;
         }
         
+        $this->objLogger->error('CORS', ['content-type'=>$objRequest->headers->get('content-type')]);
         if ($objRequest->headers->get('content-type') == 'application/json') {
+            $this->objLogger->error('CORS', ['content'=>$objGetResponseEvent->getRequest()->getContent()]);
             $content = $objGetResponseEvent->getRequest()->getContent();
             if($content){
                 $data = json_decode($content, true);
@@ -70,9 +76,9 @@ class CorsListener// implements EventSubscriberInterface
         if (HttpKernelInterface::MASTER_REQUEST !== $objFilterResponseEvent->getRequestType()) {
             return;
         }
-        $allowed_origin = array_search($objRequest->headers->get('referer'), $this->corsParameters['allowed_origin']);
-        $allowed_origin = (!$allowed_origin ? array_search($objRequest->getClientIp(), $this->corsParameters['allowed_origin']) : $allowed_origin);
-        if(!$allowed_origin){
+        $allowed_origin = array_search($objRequest->headers->get('origin'), $this->corsParameters['allowed_origin']);
+        $allowed_origin = (($allowed_origin === FALSE) ? array_search($objRequest->getClientIp(), $this->corsParameters['allowed_origin']) : $allowed_origin);
+        if($allowed_origin === FALSE){
             $objResponse = $objFilterResponseEvent->getResponse();
             return $objResponse->headers->set('status', 403);
         }
